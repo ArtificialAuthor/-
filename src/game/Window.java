@@ -8,7 +8,7 @@ import java.awt.Toolkit;
 //Класс - окно, хост программы
 public final class Window extends javax.swing.JFrame{
 	//CFG 1
-	public static Window self = new Window();
+	public static Window self;
 	public static Dimension resolution = Toolkit.getDefaultToolkit().getScreenSize();
 	public static ArrayList<WindowTab> contents = new ArrayList<WindowTab>();
 	
@@ -23,5 +23,7 @@ public final class Window extends javax.swing.JFrame{
 	}
 	
 	//Ключ зажигания
-	public static void main(String args[]) {}
+	public static void main(String args[]) {
+		self = new Window();
+	}
 }
