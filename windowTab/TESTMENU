@@ -1,0 +1,58 @@
+//Импорты
+package game.cores;
+import javax.swing.JPanel;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import java.awt.event.ActionListener;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+
+//Класс - главное меню
+public final class MainMenu extends JPanel{
+	
+	//Параметризация
+	public MainMenu() {
+		//Параметры самого MainMenu
+		setLayout(null);
+		
+		//Сборка контента
+		JButton quitButton = new JButton("Выход");
+		quitButton.addActionListener(new quitButtonEvent());
+		quitButton.setBounds(Window.resolution.width/2 - 100,Window.resolution.height/2 + 30,200,50);
+		
+		JButton playButton = new JButton("Играть");
+		playButton.addActionListener(new playButtonEvent());
+		playButton.setBounds(Window.resolution.width/2 - 100,Window.resolution.height/2 - 30,200,50);
+		playButton.setDisabledSelectedIcon(null);
+		
+		JLabel labelTitle = new JLabel("Бегающий кубик");
+		labelTitle.setFont(new Font("Calibri", Font.BOLD, 50));
+		labelTitle.setBounds(Window.resolution.width/2 - 180,50,Window.resolution.width,50);
+		
+		JLabel labelVersion = new JLabel("v0");
+		labelVersion.setFont(new Font("Calibri", Font.ITALIC, 20));
+		labelVersion.setBounds(Window.resolution.width - 75, Window.resolution.height - 75,200,100);
+		
+		//Упаковка контента
+		add(quitButton);
+		add(playButton);
+		add(labelTitle);
+		add(labelVersion);
+	}
+}
+
+//Хост задачи для кнопки выхода
+class quitButtonEvent implements ActionListener{
+	@Override
+	public void actionPerformed(ActionEvent poll) {
+		System.exit(0);
+	}
+}
+
+//Хост задачи для кнопки играть
+class playButtonEvent implements ActionListener{
+	@Override
+	public void actionPerformed(ActionEvent poll) {
+		Window.play();
+	}
+}
