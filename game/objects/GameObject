@@ -1,0 +1,31 @@
+//Зависимости
+package game.objects;
+import game.objects.details.Detail;
+import java.util.ArrayList;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+
+//Класс - игровой объект
+public class GameObject extends javax.swing.JPanel{
+	//CFG 1
+	public String name = "GameObject"; //Имя объекта
+	public double position[] = {0, 0}; //Позиция объекта
+	public double size[] = {0, 0}; //Размеры объекта
+	
+	//CFG 2
+	//Конструктор без параметров
+	public GameObject() {
+		
+	}
+	//Конструктор с именем
+	public GameObject(String setName) {
+		name = setName;
+	}
+	
+	//CFG 3
+	//Персональная обрисовка
+	public void paintComponent(Graphics g) {
+		Graphics2D g2 = (Graphics2D) g;
+		g2.fillRect(0, 0, getWidth(), getHeight());
+	}
+}
