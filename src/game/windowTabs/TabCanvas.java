@@ -110,3 +110,17 @@ class ListenScaling implements java.awt.event.MouseWheelListener {
 		connectedWith.cameraViewScale -= e.getUnitsToScroll() / 100d;
 	}
 }
+class ListenKeys implements java.awt.event.KeyListener {
+	@Override
+	public void keyPressed(java.awt.event.KeyEvent e) {
+		
+	}
+	@Override
+	public void keyReleased(java.awt.event.KeyEvent e) {
+		
+	}
+	@Override
+	public void keyTyped(java.awt.event.KeyEvent e) {
+		
+	}
+}
