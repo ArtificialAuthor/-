@@ -121,6 +121,6 @@ class ListenKeys implements java.awt.event.KeyListener {
 	}
 	@Override
 	public void keyTyped(java.awt.event.KeyEvent e) {
-		
+		 
 	}
 }
