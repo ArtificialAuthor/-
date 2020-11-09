@@ -42,6 +42,13 @@ public class TabAuthors extends WindowTab {
 		authors.setHorizontalAlignment(JLabel.CENTER);
 		authors.setBounds(0, 150, Window.resolution.width, 200);
 		add(authors);
+		
+		//HUKUTKA
+		authors = new JLabel("HUKUTKA (кушал)");
+		authors.setFont(specialAuthorsFont);
+		authors.setHorizontalAlignment(JLabel.CENTER);
+		authors.setBounds(0, 200, Window.resolution.width, 200);
+		add(authors);
 	}
 }
 
