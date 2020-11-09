@@ -53,7 +53,6 @@ class listenAuthors implements java.awt.event.ActionListener {
 class listenPlay implements java.awt.event.ActionListener {
 	@Override 
 	public void actionPerformed(java.awt.event.ActionEvent e) {
-		System.exit(0);
-		Window.self.switchTab(3); //2 - ID панели с игрой
+		Window.self.switchTab(2); //2 - ID панели с игрой
 	}
 }

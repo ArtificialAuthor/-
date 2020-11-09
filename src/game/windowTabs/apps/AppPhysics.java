@@ -1,22 +1,29 @@
 //Зависимости
 package game.windowTabs.apps;
 import java.util.ArrayList;
+import game.windowTabs.WindowTab;
 import game.objects.GameObject;
 import game.objects.behavivours.*;
 
 //Класс - игровая физика
 public class AppPhysics implements Runnable {
 	//CFG 1
-	public boolean active = false;
-	ArrayList<GameObject> scene = new ArrayList<GameObject>();
+	WindowTab attached;
+	boolean active = false;
+	ArrayList<GameObject> scene = new ArrayList<GameObject>(); //Объекты, которым необходим физический рендеринг
 	int currentLng = 0;
+	
+	//CFG 2
+	public AppPhysics(WindowTab attachWith) {
+		attached = attachWith;
+	}
 	
 	//CFG 3
 	//Физический поток
 	@Override
 	public void run() {
 		try {
-			while (active) {
+			while (true) {
 				Thread.sleep(10);
 				//Проход через все тела
 				for (int objThis = 0; objThis < currentLng; objThis++) {
@@ -26,19 +33,32 @@ public class AppPhysics implements Runnable {
 						itsPhysicalBody.doPhysicalTick();
 					} catch (Exception e) {}
 				}
+				//Сигнал
+				attached.repaint();
 			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 	}
+	//Запуск
+	public void start() {
+		active = true;
+		new Thread(this).start();
+	}
+	//Завершение
+	public void stop() {
+		active = false;
+	}
 	//Добавить объект
 	public void add(GameObject obj) {
 		scene.add(obj);
+		attached.add(obj);
 		currentLng++;
 	}
 	//Удалить объект
 	public void remove(GameObject obj) {
 		scene.remove(obj);
+		attached.remove(obj);
 		currentLng--;
 	}
 }

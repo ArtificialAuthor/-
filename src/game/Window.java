@@ -24,7 +24,11 @@ public final class Window extends javax.swing.JFrame{
 		
 		//Загрузка панелей
 		tabs.add(new TabMainMenu()); //0
+		tabs.get(0).setFocusable(true);
 		tabs.add(new TabAuthors()); //1
+		tabs.get(1).setFocusable(true);
+		tabs.add(new TabCanvas()); //2
+		tabs.get(2).setFocusable(true);
 	}
 	
 	//CFG 3
@@ -42,6 +46,7 @@ public final class Window extends javax.swing.JFrame{
 			add(tabs.get(current));
 			validate();
 			repaint();
+			tabs.get(current).requestFocusInWindow();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
