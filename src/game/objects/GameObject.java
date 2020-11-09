@@ -11,6 +11,7 @@ public class GameObject extends javax.swing.JPanel{
 	public String name = "GameObject";
 	public double position[] = {0, 0};
 	public double size[] = {0, 0};
+	public double rotation = 0;
 	ArrayList<Behavivour> behavivour = new ArrayList<Behavivour>();
 	
 	//CFG 2
@@ -28,6 +29,9 @@ public class GameObject extends javax.swing.JPanel{
 	@Override
 	public void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
+		g2.translate(getWidth()/2, getHeight()/2);
+		g2.rotate(rotation);
+		g2.translate(-getWidth()/2, -getHeight()/2);
 		g2.fillRect(0, 0, getWidth(), getHeight());
 	}
 	//Добавление компонента
