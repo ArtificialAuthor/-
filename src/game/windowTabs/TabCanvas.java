@@ -1,5 +1,5 @@
-//РљРѕРґ Artificial
-//Р—Р°РІРёСЃРёРјРѕСЃС‚Рё
+//Код Artificial
+//CFG 0
 package game.windowTabs;
 import game.Window;
 import game.windowTabs.apps.AppPhysics;
@@ -7,31 +7,36 @@ import game.objects.*;
 import game.objects.behavivours.*;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.ArrayList;
-
 import javax.imageio.ImageIO;
 
-//РљР»Р°СЃСЃ - РёРіСЂРѕРІРѕР№ 
+//Класс - холст для обрисовки объектов
 public class TabCanvas extends WindowTab{
 	//CFG 1
-	BufferedImage background;
 	double cameraPosition[] = {0, 0};
 	double cameraViewScale = 1;
 	GameObject cameraLocked = null;
 	AppPhysics physicsEngine = new AppPhysics(this);
 	ArrayList<GameObject> scene = new ArrayList<GameObject>();
+	BufferedImage background;
 	
 	//CFG 2
 	public TabCanvas() {
+		//Подготовка
 		setLayout(null);
 		try {
-			background = ImageIO.read(getClass().getResource("Background.jpg"));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+			background = ImageIO.read(Window.class.getResource("sprites/background.png"));
+		} catch (Exception e) {};
 		
-		//РўРµСЃС‚С‹, РјРѕР¶РЅРѕ СѓРґР°Р»СЏС‚СЊ
+		//Объекты на сцене
+		GameObject earth = new GameObject();
+		earth.size[0] = 640;
+		earth.size[1] = 640;
+		try {earth.texture = ImageIO.read(Window.class.getResource("sprites/earth.png"));} catch (Exception e) {};
+		System.out.println(earth.texture);
+		add(earth);
+		scene.add(earth);
+		
 		GameObject player = new GameObject("player");
 		PhysicalBody playerBody = new PhysicalBody();
 		playerBody.velocity[1] = -0.5d;
@@ -42,33 +47,20 @@ public class TabCanvas extends WindowTab{
 		physicsEngine.add(player);
 		cameraLocked = player;
 		
-		GameObject otherObj = new GameObject();
-		otherObj.size[0] = 100;
-		otherObj.size[1] = 100;
-		otherObj.position[0] = 400;
-		otherObj.position[1] = 400;
-		add(otherObj);
-		scene.add(otherObj);
-		
-		otherObj = new GameObject();
-		otherObj.size[0] = 100;
-		otherObj.size[1] = 100;
-		otherObj.position[0] = -250;
-		otherObj.position[1] = 450;
-		add(otherObj);
-		scene.add(otherObj);
-		
-		//РџРѕРґРєР»СЋС‡РµРЅРёСЏ
+		//Запуск
 		physicsEngine.start();
 		addMouseWheelListener(new ListenScaling(this));
+		ListenKeys controls = new ListenKeys(this);
+		controls.setControls(playerBody);
+		addKeyListener(controls);
 	}
 	
 	//CFG 3
-	//РћС‚СЂРёСЃРѕРІРєР°
+	//Обрисовка
 	@Override
 	public void paintComponent(Graphics g) {
-		g.drawImage(background, 0, 0, null);
-		//РќР°СЂРёСЃРѕРІР°С‚СЊ СЃРЅР°С‡Р°Р»Р° РѕР±СЉРµРєС‚, Р·Р° РєРѕС‚РѕСЂС‹Рј СЃР»РµРґРёС‚ РєР°РјРµСЂР°
+		g.drawImage(background.getScaledInstance(getWidth(), getHeight(), background.SCALE_FAST), 0, 0, null);
+		//Прорисовка того, что в центре экрана
 		try {
 			cameraLocked.setBounds(
 				(int)(Window.resolution.width - cameraLocked.size[0] * cameraViewScale) /2,
@@ -79,7 +71,7 @@ public class TabCanvas extends WindowTab{
 			cameraPosition[0] = cameraLocked.position[0];
 			cameraPosition[1] = cameraLocked.position[1];
 		} catch (Exception e) {}
-		//РќР°СЂРёСЃРѕРІР°С‚СЊ РѕСЃС‚Р°Р»СЊРЅС‹Рµ
+		//Прорисовка остального
 		for (GameObject obj : scene) { 
 			if (obj != cameraLocked) {
 				obj.setBounds(
@@ -94,7 +86,7 @@ public class TabCanvas extends WindowTab{
 }
 
 //CFG 4
-//РЎР»СѓС€Р°С‚РµР»СЊ РјР°СЃС€С‚Р°Р±РёСЂРѕРІР°РЅРёСЏ
+//Слушатель масштабирования
 class ListenScaling implements java.awt.event.MouseWheelListener {
 	//CFG 1
 	TabCanvas connectedWith;
@@ -105,15 +97,46 @@ class ListenScaling implements java.awt.event.MouseWheelListener {
 	}
 	
 	//CFG 3
-	//РЎР°РјРѕ С‚РµР»Рѕ СЃР»СѓС€Р°С‚РµР»СЏ
 	public void mouseWheelMoved(java.awt.event.MouseWheelEvent e) {
 		connectedWith.cameraViewScale -= e.getUnitsToScroll() / 100d;
 	}
 }
+//Лушатель управления
 class ListenKeys implements java.awt.event.KeyListener {
+	//CFG 1
+	TabCanvas connectedWith;
+	PhysicalBody relatedControls;
+	
+	//CFG 2
+	public ListenKeys(TabCanvas connectTo) {
+		connectedWith = connectTo;
+	}
+	
+	//CFG 3
+	//Задать управляемый объект
+	public void setControls(PhysicalBody setControls) {
+		relatedControls = setControls;
+	}
+	//Тело
 	@Override
 	public void keyPressed(java.awt.event.KeyEvent e) {
-		
+		int code = e.getKeyCode();
+		if (code == 27) {
+			connectedWith.physicsEngine.stop();
+			Window.self.switchTab(0);
+		} else {
+			if (relatedControls != null) {
+				if (code == 38){ //Вверх
+					relatedControls.velocity[1] += 1/2d;
+				} else if(code == 40) { //Вниз
+					relatedControls.velocity[1] += -1/2d;
+				} else if(code == 37) { //Влево
+					relatedControls.velocity[0] += 1/2d;
+				} else if(code == 39) { //Вправо
+					relatedControls.velocity[0] += -1/2d;
+				}
+			}
+		}
 	}
 	@Override
 	public void keyReleased(java.awt.event.KeyEvent e) {

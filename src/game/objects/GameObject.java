@@ -1,9 +1,11 @@
 //Код Artificial
-//Зависимости
+//CFG 0
 package game.objects;
 import java.util.ArrayList;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 
 //Класс - игровой объект
 public class GameObject extends javax.swing.JPanel{
@@ -12,14 +14,15 @@ public class GameObject extends javax.swing.JPanel{
 	public double position[] = {0, 0};
 	public double size[] = {0, 0};
 	public double rotation = 0;
+	public BufferedImage texture;
 	ArrayList<Behavivour> behavivour = new ArrayList<Behavivour>();
 	
 	//CFG 2
-	//Конструктор без имени
+	//Без имени
 	public GameObject() {
 		
 	}
-	//Конструктор с именем
+	//Именной
 	public GameObject(String setName) {
 		name = setName;
 	}
@@ -32,23 +35,28 @@ public class GameObject extends javax.swing.JPanel{
 		g2.translate(getWidth()/2, getHeight()/2);
 		g2.rotate(rotation);
 		g2.translate(-getWidth()/2, -getHeight()/2);
-		g2.fillRect(0, 0, getWidth(), getHeight());
+		if (texture != null) {
+			g2.drawImage(texture.getScaledInstance(getWidth(), getHeight(), texture.SCALE_FAST), 0, 0, null);
+		} else {
+			g2.setColor(Color.white);
+			g2.fillRect(0, 0, getWidth(), getHeight());
+		}
 	}
-	//Добавление поведения
+	//Добавить поведение
 	public void addBehavivour(Behavivour beh) {
 		beh.attached = this;
 		behavivour.add(beh);
 	}
-	//Выдергивание поведения
+	//Выдернуть поведение
 	public Behavivour getBehavivour(String behavivourID) throws Exception {
 		for (Behavivour beh : behavivour) {
 			if(beh.ID == behavivourID) {
 				return beh;
 			}
 		}
-		throw new Exception("У "+name+" нет поведения "+behavivourID+"!");
+		throw new Exception("пїЅ "+name+" пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ "+behavivourID+"!");
 	}
-	//Проверка на наличие поведения
+	//Проверить поведение
 	public boolean hasBehavivour(String behavivourID) {
 		for (Behavivour beh : behavivour) {
 			if(beh.ID == behavivourID) {
