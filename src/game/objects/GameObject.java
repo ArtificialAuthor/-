@@ -30,6 +30,11 @@ public class GameObject extends javax.swing.JPanel{
 		Graphics2D g2 = (Graphics2D) g;
 		g2.fillRect(0, 0, getWidth(), getHeight());
 	}
+	//Добавление компонента
+	public void addBehavivour(Behavivour beh) {
+		beh.attached = this;
+		behavivour.add(beh);
+	}
 	//Выдергивание компонента
 	public Behavivour getBehavivour(String behavivourID) throws Exception {
 		for (Behavivour beh : behavivour) {
@@ -37,6 +42,6 @@ public class GameObject extends javax.swing.JPanel{
 				return beh;
 			}
 		}
-		throw new Exception("У "+name+" нет game.objects.behavivours."+behavivourID+"!");
+		throw new Exception("У "+name+" нет поведения "+behavivourID+"!");
 	}
 }
