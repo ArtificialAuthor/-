@@ -44,4 +44,13 @@ public class GameObject extends javax.swing.JPanel{
 		}
 		throw new Exception("У "+name+" нет поведения "+behavivourID+"!");
 	}
+	//Проверка компонента
+	public boolean hasBehavivour(String behavivourID) {
+		for (Behavivour beh : behavivour) {
+			if(beh.ID == behavivourID) {
+				return true;
+			}
+		}
+		return false;
+	}	
 }
