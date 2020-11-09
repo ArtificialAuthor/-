@@ -1,16 +1,21 @@
-//Код Artificial
-//Зависимости
+//РљРѕРґ Artificial
+//Р—Р°РІРёСЃРёРјРѕСЃС‚Рё
 package game.windowTabs;
 import game.Window;
 import game.windowTabs.apps.AppPhysics;
 import game.objects.*;
 import game.objects.behavivours.*;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 
-//Класс - игровой 
+import javax.imageio.ImageIO;
+
+//РљР»Р°СЃСЃ - РёРіСЂРѕРІРѕР№ 
 public class TabCanvas extends WindowTab{
 	//CFG 1
+	BufferedImage background;
 	double cameraPosition[] = {0, 0};
 	double cameraViewScale = 1;
 	GameObject cameraLocked = null;
@@ -20,8 +25,13 @@ public class TabCanvas extends WindowTab{
 	//CFG 2
 	public TabCanvas() {
 		setLayout(null);
+		try {
+			background = ImageIO.read(getClass().getResource("Background.jpg"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
-		//Тесты, можно удалять
+		//РўРµСЃС‚С‹, РјРѕР¶РЅРѕ СѓРґР°Р»СЏС‚СЊ
 		GameObject player = new GameObject("player");
 		PhysicalBody playerBody = new PhysicalBody();
 		playerBody.velocity[1] = -0.5d;
@@ -48,17 +58,17 @@ public class TabCanvas extends WindowTab{
 		add(otherObj);
 		scene.add(otherObj);
 		
-		//Подключения
+		//РџРѕРґРєР»СЋС‡РµРЅРёСЏ
 		physicsEngine.start();
 		addMouseWheelListener(new ListenScaling(this));
 	}
 	
 	//CFG 3
-	//Отрисовка
+	//РћС‚СЂРёСЃРѕРІРєР°
 	@Override
 	public void paintComponent(Graphics g) {
-		g.clearRect(0, 0, Window.resolution.width, Window.resolution.height);
-		//Нарисовать сначала объект, за которым следит камера
+		g.drawImage(background, 0, 0, null);
+		//РќР°СЂРёСЃРѕРІР°С‚СЊ СЃРЅР°С‡Р°Р»Р° РѕР±СЉРµРєС‚, Р·Р° РєРѕС‚РѕСЂС‹Рј СЃР»РµРґРёС‚ РєР°РјРµСЂР°
 		try {
 			cameraLocked.setBounds(
 				(int)(Window.resolution.width - cameraLocked.size[0] * cameraViewScale) /2,
@@ -69,7 +79,7 @@ public class TabCanvas extends WindowTab{
 			cameraPosition[0] = cameraLocked.position[0];
 			cameraPosition[1] = cameraLocked.position[1];
 		} catch (Exception e) {}
-		//Нарисовать остальные
+		//РќР°СЂРёСЃРѕРІР°С‚СЊ РѕСЃС‚Р°Р»СЊРЅС‹Рµ
 		for (GameObject obj : scene) { 
 			if (obj != cameraLocked) {
 				obj.setBounds(
@@ -84,7 +94,7 @@ public class TabCanvas extends WindowTab{
 }
 
 //CFG 4
-//Слушатель масштабирования
+//РЎР»СѓС€Р°С‚РµР»СЊ РјР°СЃС€С‚Р°Р±РёСЂРѕРІР°РЅРёСЏ
 class ListenScaling implements java.awt.event.MouseWheelListener {
 	//CFG 1
 	TabCanvas connectedWith;
@@ -95,7 +105,7 @@ class ListenScaling implements java.awt.event.MouseWheelListener {
 	}
 	
 	//CFG 3
-	//Само тело слушателя
+	//РЎР°РјРѕ С‚РµР»Рѕ СЃР»СѓС€Р°С‚РµР»СЏ
 	public void mouseWheelMoved(java.awt.event.MouseWheelEvent e) {
 		connectedWith.cameraViewScale -= e.getUnitsToScroll() / 100d;
 	}
