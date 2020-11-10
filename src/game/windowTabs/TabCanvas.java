@@ -29,17 +29,14 @@ public class TabCanvas extends WindowTab{
 		} catch (Exception e) {};
 		
 		//Объекты на сцене
-		GameObject earth = new GameObject();
+		GameObject earth = new GameObject("earth");
 		earth.size[0] = 640;
 		earth.size[1] = 640;
-		try {earth.texture = ImageIO.read(Window.class.getResource("sprites/earth.png"));} catch (Exception e) {};
-		System.out.println(earth.texture);
-		add(earth);
+		earth.setTexture("earth.png");
 		scene.add(earth);
 		
 		GameObject player = new GameObject("player");
 		PhysicalBody playerBody = new PhysicalBody();
-		playerBody.velocity[1] = -0.5d;
 		player.addBehavivour(playerBody);
 		player.size[0] = 20;
 		player.size[1] = 20;
@@ -59,27 +56,40 @@ public class TabCanvas extends WindowTab{
 	//Обрисовка
 	@Override
 	public void paintComponent(Graphics g) {
-		g.drawImage(background.getScaledInstance(getWidth(), getHeight(), background.SCALE_FAST), 0, 0, null);
-		//Прорисовка того, что в центре экрана
-		try {
-			cameraLocked.setBounds(
-				(int)(Window.resolution.width - cameraLocked.size[0] * cameraViewScale) /2,
-				(int)(Window.resolution.height - cameraLocked.size[1] * cameraViewScale) /2,
-				(int)(cameraLocked.size[0] * cameraViewScale),
-				(int)(cameraLocked.size[1] * cameraViewScale)
-			);
+		g.drawImage(background, 0, 0, Window.resolution.width, Window.resolution.height, null);
+		//Задать координаты
+		if (cameraLocked != null) {
 			cameraPosition[0] = cameraLocked.position[0];
 			cameraPosition[1] = cameraLocked.position[1];
-		} catch (Exception e) {}
-		//Прорисовка остального
-		for (GameObject obj : scene) { 
-			if (obj != cameraLocked) {
-				obj.setBounds(
-					(int)((obj.position[0] + cameraPosition[0] - obj.size[0]/2) * cameraViewScale + Window.resolution.width/2),
-					(int)((obj.position[1] + cameraPosition[1] - obj.size[1]/2) * cameraViewScale + Window.resolution.height/2),
-					(int)(obj.size[0] * cameraViewScale),
-					(int)(obj.size[1] * cameraViewScale)
-				);
+		}
+		//Рендеринг
+		for (GameObject obj : scene) {
+			if (
+				//Фильтрация рендеринга
+				(cameraPosition[0] - obj.position[0] + obj.size[0]/2) * cameraViewScale + Window.resolution.width / 2 >= 0 &
+				(cameraPosition[1] - obj.position[1] + obj.size[1]/2) * cameraViewScale + Window.resolution.height / 2 >= 0 &
+				(cameraPosition[0] - obj.position[0] - obj.size[0]) * cameraViewScale <= Window.resolution.width / 2 &
+				(cameraPosition[1] - obj.position[1] - obj.size[1]) * cameraViewScale <= Window.resolution.height / 2
+			) {
+				if (obj.texture != null) {
+					//У объекта есть текстура
+					g.drawImage(
+						obj.texture,
+						(int)((cameraPosition[0] - obj.position[0] - obj.size[0]/2) * cameraViewScale + Window.resolution.width / 2),
+						(int)((cameraPosition[1] - obj.position[1] - obj.size[1]/2) * cameraViewScale + Window.resolution.height / 2),
+						(int)(obj.size[1] * cameraViewScale),
+						(int)(obj.size[0] * cameraViewScale),
+						null
+					);
+				} else {
+					//У объекта нет текстура
+					g.fillRect(
+						(int)((cameraPosition[0] - obj.position[0] - obj.size[0]/2) * cameraViewScale + Window.resolution.width / 2),
+						(int)((cameraPosition[1] - obj.position[1] - obj.size[1]/2) * cameraViewScale + Window.resolution.height / 2),
+						(int)(obj.size[1] * cameraViewScale),
+						(int)(obj.size[0] * cameraViewScale)
+					);
+				}
 			}
 		}
 	}
@@ -109,7 +119,7 @@ class ListenKeys implements java.awt.event.KeyListener {
 	
 	//CFG 2
 	public ListenKeys(TabCanvas connectTo) {
-		connectedWith = connectTo;
+		connectedWith = connectTo; 
 	}
 	
 	//CFG 3

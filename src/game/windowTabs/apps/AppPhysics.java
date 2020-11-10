@@ -52,13 +52,11 @@ public class AppPhysics implements Runnable {
 	//Добавить объект
 	public void add(GameObject obj) {
 		scene.add(obj);
-		attached.add(obj);
 		currentLng++;
 	}
 	//Удалить объект
 	public void remove(GameObject obj) {
 		scene.remove(obj);
-		attached.remove(obj);
 		currentLng--;
 	}
 }
