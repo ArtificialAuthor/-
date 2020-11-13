@@ -15,7 +15,7 @@ public class TabAuthors extends WindowTab {
 		Font specialAuthorsFont = new Font("Times New Roman", Font.ITALIC, 40);
 		
 		//Кнопка "Назад"
-		JButton back = new JButton("Back");
+		JButton back = new JButton("Назад");
 		back.setFont(defaultButtonFont);
 		back.setBounds(Window.resolution.width/2-75, Window.resolution.height/10*9, 150, 50);
 		back.addActionListener(new ListenBackFrom1());

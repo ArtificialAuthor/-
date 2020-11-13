@@ -21,10 +21,12 @@ public class TabCanvas extends WindowTab{
 	AppPhysics physicsEngine = new AppPhysics(this);
 	ArrayList<GameObject> scene = new ArrayList<GameObject>();
 	BufferedImage background;
+	public TabPause tabPause = new TabPause(this);
 	
 	//CFG 2
 	public TabCanvas() {
 		//Подготовка
+		add(tabPause);
 		setLayout(null);
 		try {
 			background = ImageIO.read(Window.class.getResource("sprites/background.png"));
@@ -196,7 +198,7 @@ class ListenKeys implements java.awt.event.KeyListener {
 		int code = e.getKeyCode();
 		if (code == 27) {
 			connectedWith.physicsEngine.stop();
-			Window.self.switchTab(0);
+			connectedWith.tabPause.setVisible(true);
 		}
 	}
 	@Override
