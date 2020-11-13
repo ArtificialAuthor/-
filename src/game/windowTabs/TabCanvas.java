@@ -6,6 +6,7 @@ import game.windowTabs.apps.AppPhysics;
 import game.objects.*;
 import game.objects.behavivours.*;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.MouseInfo;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ public class TabCanvas extends WindowTab{
 		GameObject earth = new GameObject("earth");
 		earth.size[0] = 640;
 		earth.size[1] = 640;
+		earth.rotation = .25d;
 		earth.setTexture("moon.png");
 		scene.add(earth);
 		
@@ -41,6 +43,7 @@ public class TabCanvas extends WindowTab{
 		player.addBehavivour(playerBody);
 		player.size[0] = 20;
 		player.size[1] = 20;
+		player.setTexture("ship.png");
 		scene.add(player);
 		physicsEngine.add(player);
 		cameraLocked = player;
@@ -58,7 +61,8 @@ public class TabCanvas extends WindowTab{
 	//Обрисовка
 	@Override
 	public void paintComponent(Graphics g) {
-		g.drawImage(background, 0, 0, Window.resolution.width, Window.resolution.height, null);
+		Graphics2D g2 = (Graphics2D) g;
+		g2.drawImage(background, 0, 0, Window.resolution.width, Window.resolution.height, null);
 		//Задать координаты
 		if (cameraLocked != null) {
 			cameraPosition[0] = cameraLocked.position[0];
@@ -66,32 +70,44 @@ public class TabCanvas extends WindowTab{
 		}
 		//Рендеринг
 		for (GameObject obj : scene) {
+			int x = (int)((cameraPosition[0] - obj.position[0] - obj.size[0]/2) * cameraViewScale + Window.resolution.width / 2);
+			int y = (int)((cameraPosition[1] - obj.position[1] - obj.size[1]/2) * cameraViewScale + Window.resolution.height / 2);
 			if (
 				//Фильтрация рендеринга
-				(cameraPosition[0] - obj.position[0] + obj.size[0]/2) * cameraViewScale + Window.resolution.width / 2 >= 0 &
-				(cameraPosition[1] - obj.position[1] + obj.size[1]/2) * cameraViewScale + Window.resolution.height / 2 >= 0 &
-				(cameraPosition[0] - obj.position[0] - obj.size[0]) * cameraViewScale <= Window.resolution.width / 2 &
-				(cameraPosition[1] - obj.position[1] - obj.size[1]) * cameraViewScale <= Window.resolution.height / 2
+				x >= -obj.size[0] * cameraViewScale &
+				y >= -obj.size[1] * cameraViewScale &
+				x - obj.size[0] * cameraViewScale <= Window.resolution.width / 2 &
+				y - obj.size[1] * cameraViewScale <= Window.resolution.height / 2
 			) {
+				int swapX = (int)((cameraPosition[0] - obj.position[0]) * cameraViewScale + Window.resolution.width / 2);
+				int swapY = (int)((cameraPosition[1] - obj.position[1]) * cameraViewScale + Window.resolution.height / 2);
+				g2.rotate(obj.rotation,
+					swapX,
+					swapY
+				);
 				if (obj.texture != null) {
 					//У объекта есть текстура
-					g.drawImage(
+					g2.drawImage(
 						obj.texture,
-						(int)((cameraPosition[0] - obj.position[0] - obj.size[0]/2) * cameraViewScale + Window.resolution.width / 2),
-						(int)((cameraPosition[1] - obj.position[1] - obj.size[1]/2) * cameraViewScale + Window.resolution.height / 2),
+						x,
+						y,
 						(int)(obj.size[1] * cameraViewScale),
 						(int)(obj.size[0] * cameraViewScale),
 						null
 					);
 				} else {
 					//У объекта нет текстура
-					g.fillRect(
-						(int)((cameraPosition[0] - obj.position[0] - obj.size[0]/2) * cameraViewScale + Window.resolution.width / 2),
-						(int)((cameraPosition[1] - obj.position[1] - obj.size[1]/2) * cameraViewScale + Window.resolution.height / 2),
+					g2.fillRect(
+						x,
+						y,
 						(int)(obj.size[1] * cameraViewScale),
 						(int)(obj.size[0] * cameraViewScale)
 					);
 				}
+				g2.rotate(-obj.rotation,
+					swapX,
+					swapY
+				);
 			}
 		}
 	}
@@ -155,7 +171,7 @@ class ListenScaling implements java.awt.event.MouseWheelListener {
 	
 	//CFG 3
 	public void mouseWheelMoved(java.awt.event.MouseWheelEvent e) {
-		double dir = e.getUnitsToScroll() / 100d;
+		double dir = -e.getUnitsToScroll() / 100d;
 		if (dir < 0 & connectedWith.cameraViewScale + dir > 0) {
 			connectedWith.cameraViewScale += dir;
 		} else if (dir > 0 & connectedWith.cameraViewScale + dir < 4) {
