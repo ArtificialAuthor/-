@@ -26,8 +26,8 @@ public class TabCanvas extends WindowTab{
 	//CFG 2
 	public TabCanvas() {
 		//Подготовка
-		add(tabPause);
 		setLayout(null);
+		add(tabPause);
 		try {
 			background = ImageIO.read(Window.class.getResource("sprites/background.png"));
 		} catch (Exception e) {};
