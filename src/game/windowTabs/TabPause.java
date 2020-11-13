@@ -1,5 +1,7 @@
 package game.windowTabs;
+import java.awt.Font;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import game.Window;
 
 //Код - панель паузы
@@ -13,21 +15,29 @@ public class TabPause extends WindowTab {
 		connectedWith = connectedTo;
 		setLayout(null);
 		setVisible(false);
+		Font specialPauseFont = new Font("Times New Roman", Font.BOLD, 60);
 		
 		//Размеры окошечка
 		setBounds(Window.resolution.width / 2 - Window.resolution.width/8, Window.resolution.height / 2 - Window.resolution.height / 4, Window.resolution.width / 4, Window.resolution.height / 2);
 		
+		//Шапка
+		JLabel pause = new JLabel("Пауза");
+		pause.setFont(specialPauseFont);
+		pause.setHorizontalAlignment(JLabel.CENTER);
+		pause.setBounds(0, 0,  Window.resolution.width / 4, Window.resolution.height / 6);
+		add(pause);
+		
 		// Кнопка "Продолжить"
 		JButton next = new JButton("Продолжить");
 		next.setFont(defaultButtonFont);
-		next.setBounds(40, 40, Window.resolution.width / 4 - 80, Window.resolution.height / 4 - 80);
+		next.setBounds(Window.resolution.height/8-(Window.resolution.width / 32*5)/128*32, (Window.resolution.height / 2)/3+((Window.resolution.height / 2)/3)/2-15 , Window.resolution.width / 32*5, Window.resolution.height / 12);
 		next.addActionListener(new ListenСontinueFrom1(this));
 		add(next);
 		
 		// Кнопка "Выход в меню"
-		JButton exit = new JButton("Выход в меню");
+		JButton exit = new JButton("Выйти в меню");
 		exit.setFont(defaultButtonFont);
-		exit.setBounds(40, Window.resolution.height / 4 + 80, Window.resolution.width / 4 - 80, Window.resolution.height / 4 - 80);
+		exit.setBounds(Window.resolution.height/8-(Window.resolution.width / 64*11)/128*51, (Window.resolution.height / 2)/3*2+((Window.resolution.height / 2)/3)/2-15 , Window.resolution.width / 64*12, Window.resolution.height / 12);
 		exit.addActionListener(new ListenExitFrom1());
 		add(exit);
 	}

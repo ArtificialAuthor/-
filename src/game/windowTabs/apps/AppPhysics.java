@@ -28,7 +28,7 @@ public class AppPhysics implements Runnable {
 	@Override
 	public void run() {
 		try {
-			while (true) {
+			while (active) {
 				Thread.sleep(10);
 				//Проход через все тела
 				for (int objThis = 0; objThis < currentLng; objThis++) {
@@ -38,8 +38,6 @@ public class AppPhysics implements Runnable {
 						itsPhysicalBody.doPhysicalTick();
 					} catch (Exception e) {}
 				}
-				//Сигнал
-				attached.repaint();
 			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
