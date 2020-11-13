@@ -1,4 +1,4 @@
-//Êîä Artificial
+//ÐšÐ¾Ð´ Artificial
 //CFG 0
 package game.windowTabs;
 import game.Window;
@@ -6,11 +6,12 @@ import game.windowTabs.apps.AppPhysics;
 import game.objects.*;
 import game.objects.behavivours.*;
 import java.awt.Graphics;
+import java.awt.MouseInfo;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
-//Êëàññ - õîëñò äëÿ îáðèñîâêè îáúåêòîâ
+//ÐšÐ»Ð°ÑÑ - Ñ…Ð¾Ð»ÑÑ‚ Ð´Ð»Ñ Ð¾Ð±Ñ€Ð¸ÑÐ¾Ð²ÐºÐ¸ Ð¾Ð±ÑŠÐµÐºÑ‚Ð¾Ð²
 public class TabCanvas extends WindowTab{
 	//CFG 1
 	double cameraPosition[] = {0, 0};
@@ -22,17 +23,17 @@ public class TabCanvas extends WindowTab{
 	
 	//CFG 2
 	public TabCanvas() {
-		//Ïîäãîòîâêà
+		//ÐŸÐ¾Ð´Ð³Ð¾Ñ‚Ð¾Ð²ÐºÐ°
 		setLayout(null);
 		try {
 			background = ImageIO.read(Window.class.getResource("sprites/background.png"));
 		} catch (Exception e) {};
 		
-		//Îáúåêòû íà ñöåíå
+		//ÐžÐ±ÑŠÐµÐºÑ‚Ñ‹ Ð½Ð° ÑÑ†ÐµÐ½Ðµ
 		GameObject earth = new GameObject("earth");
 		earth.size[0] = 640;
 		earth.size[1] = 640;
-		earth.setTexture("earth.png");
+		earth.setTexture("moon.png");
 		scene.add(earth);
 		
 		GameObject player = new GameObject("player");
@@ -44,35 +45,36 @@ public class TabCanvas extends WindowTab{
 		physicsEngine.add(player);
 		cameraLocked = player;
 		
-		//Çàïóñê
+		//Ð—Ð°Ð¿ÑƒÑÐº
 		physicsEngine.start();
 		addMouseWheelListener(new ListenScaling(this));
-		ListenKeys controls = new ListenKeys(this);
-		controls.setControls(playerBody);
-		addKeyListener(controls);
+		addKeyListener(new ListenKeys(this));
+		ListenMouse controllingMouse = new ListenMouse(this);
+		controllingMouse.setControls(playerBody);
+		addMouseListener(controllingMouse);
 	}
 	
 	//CFG 3
-	//Îáðèñîâêà
+	//ÐžÐ±Ñ€Ð¸ÑÐ¾Ð²ÐºÐ°
 	@Override
 	public void paintComponent(Graphics g) {
 		g.drawImage(background, 0, 0, Window.resolution.width, Window.resolution.height, null);
-		//Çàäàòü êîîðäèíàòû
+		//Ð—Ð°Ð´Ð°Ñ‚ÑŒ ÐºÐ¾Ð¾Ñ€Ð´Ð¸Ð½Ð°Ñ‚Ñ‹
 		if (cameraLocked != null) {
 			cameraPosition[0] = cameraLocked.position[0];
 			cameraPosition[1] = cameraLocked.position[1];
 		}
-		//Ðåíäåðèíã
+		//Ð ÐµÐ½Ð´ÐµÑ€Ð¸Ð½Ð³
 		for (GameObject obj : scene) {
 			if (
-				//Ôèëüòðàöèÿ ðåíäåðèíãà
+				//Ð¤Ð¸Ð»ÑŒÑ‚Ñ€Ð°Ñ†Ð¸Ñ Ñ€ÐµÐ½Ð´ÐµÑ€Ð¸Ð½Ð³Ð°
 				(cameraPosition[0] - obj.position[0] + obj.size[0]/2) * cameraViewScale + Window.resolution.width / 2 >= 0 &
 				(cameraPosition[1] - obj.position[1] + obj.size[1]/2) * cameraViewScale + Window.resolution.height / 2 >= 0 &
 				(cameraPosition[0] - obj.position[0] - obj.size[0]) * cameraViewScale <= Window.resolution.width / 2 &
 				(cameraPosition[1] - obj.position[1] - obj.size[1]) * cameraViewScale <= Window.resolution.height / 2
 			) {
 				if (obj.texture != null) {
-					//Ó îáúåêòà åñòü òåêñòóðà
+					//Ð£ Ð¾Ð±ÑŠÐµÐºÑ‚Ð° ÐµÑÑ‚ÑŒ Ñ‚ÐµÐºÑÑ‚ÑƒÑ€Ð°
 					g.drawImage(
 						obj.texture,
 						(int)((cameraPosition[0] - obj.position[0] - obj.size[0]/2) * cameraViewScale + Window.resolution.width / 2),
@@ -82,7 +84,7 @@ public class TabCanvas extends WindowTab{
 						null
 					);
 				} else {
-					//Ó îáúåêòà íåò òåêñòóðà
+					//Ð£ Ð¾Ð±ÑŠÐµÐºÑ‚Ð° Ð½ÐµÑ‚ Ñ‚ÐµÐºÑÑ‚ÑƒÑ€Ð°
 					g.fillRect(
 						(int)((cameraPosition[0] - obj.position[0] - obj.size[0]/2) * cameraViewScale + Window.resolution.width / 2),
 						(int)((cameraPosition[1] - obj.position[1] - obj.size[1]/2) * cameraViewScale + Window.resolution.height / 2),
@@ -96,7 +98,52 @@ public class TabCanvas extends WindowTab{
 }
 
 //CFG 4
-//Ñëóøàòåëü ìàñøòàáèðîâàíèÿ
+//Ð¡Ð»ÑƒÑˆÐ°Ñ‚ÐµÐ»ÑŒ Ð¼Ñ‹ÑˆÐ¸
+class ListenMouse implements java.awt.event.MouseListener, Runnable {
+	//CFG 1
+	TabCanvas connectedWith;
+	PhysicalBody connectedControls;
+	boolean active = false;
+	
+	//CFG 2
+	public ListenMouse(TabCanvas connectTo) {
+		connectedWith = connectTo;
+	}
+	
+	//CFG 3
+	//ÐŸÐ¾Ñ‚Ð¾Ðº
+	@Override
+	public void run() {
+		try {
+			while(active) {
+				double vec[] = {
+					Window.resolution.width / 2 - MouseInfo.getPointerInfo().getLocation().x,
+					Window.resolution.height / 2 - MouseInfo.getPointerInfo().getLocation().y
+ 				};
+				double lng = Math.pow(vec[0] * vec[0] + vec[1] * vec[1], .5d);
+				connectedControls.velocity[0] += vec[0] / lng / 100;
+				connectedControls.velocity[1] += vec[1] / lng / 100;
+				Thread.sleep(11);
+			}
+		} catch (InterruptedException e) {}
+	}
+	//ÐŸÐµÑ€ÐµÐ´Ð°Ñ‚ÑŒ ÑƒÐ¿Ñ€Ð°Ð²Ð»ÐµÐ½Ð¸Ðµ
+	public void setControls(PhysicalBody setControls) {
+		connectedControls = setControls;
+	}
+	//Ð¢ÐµÐ»Ð¾
+	public void mouseReleased(java.awt.event.MouseEvent e) {
+		active = false;
+	}
+	public void mousePressed(java.awt.event.MouseEvent e) {
+		active = true;
+		new Thread(this).start();
+	}
+	public void mouseClicked(java.awt.event.MouseEvent e) {}
+	public void mouseExited(java.awt.event.MouseEvent e) {}
+	public void mouseEntered(java.awt.event.MouseEvent e) {}
+}
+//Ð¡Ð»ÑƒÑˆÐ°Ñ‚ÐµÐ»ÑŒ Ð¼Ð°ÑÑˆÑ‚Ð°Ð±Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ñ
 class ListenScaling implements java.awt.event.MouseWheelListener {
 	//CFG 1
 	TabCanvas connectedWith;
@@ -108,14 +155,18 @@ class ListenScaling implements java.awt.event.MouseWheelListener {
 	
 	//CFG 3
 	public void mouseWheelMoved(java.awt.event.MouseWheelEvent e) {
-		connectedWith.cameraViewScale -= e.getUnitsToScroll() / 100d;
+		double dir = e.getUnitsToScroll() / 100d;
+		if (dir < 0 & connectedWith.cameraViewScale + dir > 0) {
+			connectedWith.cameraViewScale += dir;
+		} else if (dir > 0 & connectedWith.cameraViewScale + dir < 4) {
+			connectedWith.cameraViewScale += dir;
+		}
 	}
 }
-//Ëóøàòåëü óïðàâëåíèÿ
+//Ð¡Ð»ÑƒÑˆÐ°Ñ‚ÐµÐ»ÑŒ ÑƒÐ¿Ñ€Ð°Ð²Ð»ÐµÐ½Ð¸Ñ ÐºÐ»Ð°Ð²Ð¸Ð°Ñ‚ÑƒÑ€Ð¾Ð¹
 class ListenKeys implements java.awt.event.KeyListener {
 	//CFG 1
 	TabCanvas connectedWith;
-	PhysicalBody relatedControls;
 	
 	//CFG 2
 	public ListenKeys(TabCanvas connectTo) {
@@ -123,37 +174,17 @@ class ListenKeys implements java.awt.event.KeyListener {
 	}
 	
 	//CFG 3
-	//Çàäàòü óïðàâëÿåìûé îáúåêò
-	public void setControls(PhysicalBody setControls) {
-		relatedControls = setControls;
-	}
-	//Òåëî
+	//Ð¢ÐµÐ»Ð¾
 	@Override
 	public void keyPressed(java.awt.event.KeyEvent e) {
 		int code = e.getKeyCode();
 		if (code == 27) {
 			connectedWith.physicsEngine.stop();
 			Window.self.switchTab(0);
-		} else {
-			if (relatedControls != null) {
-				if (code == 38){ //Ââåðõ
-					relatedControls.velocity[1] += 1/2d;
-				} else if(code == 40) { //Âíèç
-					relatedControls.velocity[1] += -1/2d;
-				} else if(code == 37) { //Âëåâî
-					relatedControls.velocity[0] += 1/2d;
-				} else if(code == 39) { //Âïðàâî
-					relatedControls.velocity[0] += -1/2d;
-				}
-			}
 		}
 	}
 	@Override
-	public void keyReleased(java.awt.event.KeyEvent e) {
-		
-	}
+	public void keyReleased(java.awt.event.KeyEvent e) {}
 	@Override
-	public void keyTyped(java.awt.event.KeyEvent e) {
-		
-	}
+	public void keyTyped(java.awt.event.KeyEvent e) {}
 }

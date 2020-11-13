@@ -10,8 +10,13 @@ public class AppPhysics implements Runnable {
 	//CFG 1
 	WindowTab attached;
 	boolean active = false;
-	ArrayList<GameObject> scene = new ArrayList<GameObject>(); //Объекты, которым необходим физический рендеринг
 	int currentLng = 0;
+	
+	//!ВНИМАНИЕ!
+	//ЛИСТЫ - КОНФИНГУРАТОРЫ, ПРОСЬБА НЕ ТРОГАТЬ!
+	ArrayList<GameObject> scene = new ArrayList<GameObject>(); //Общий список объектов, которым требуется физический рендеринг
+	ArrayList<PhysicalBody> PhysicalBodies = new ArrayList<PhysicalBody>();
+	
 	
 	//CFG 2
 	public AppPhysics(WindowTab attachWith) {
