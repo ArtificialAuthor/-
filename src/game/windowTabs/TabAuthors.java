@@ -1,18 +1,28 @@
 //Код Artt
 //Зависимости
 package game.windowTabs;
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import game.Window;
+
+import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.awt.color.*;
 
 //Код - панель с авторами
 public class TabAuthors extends WindowTab {
+	//CFG1
+	BufferedImage background;
+		
 	//CFG 2
 	public TabAuthors() {
 		//Подготовка
 		setLayout(null);
 		Font specialAuthorsFont = new Font("Times New Roman", Font.ITALIC, 40);
+		
 		
 		//Кнопка "Назад"
 		JButton back = new JButton("Назад");
@@ -27,6 +37,7 @@ public class TabAuthors extends WindowTab {
 		authors.setFont(defaultTextFont);
 		authors.setHorizontalAlignment(JLabel.CENTER);
 		authors.setBounds(0, 0, Window.resolution.width, 200);
+		authors.setForeground(Color.WHITE);
 		add(authors);
 		
 		//Artt
@@ -34,6 +45,7 @@ public class TabAuthors extends WindowTab {
 		authors.setFont(specialAuthorsFont);
 		authors.setHorizontalAlignment(JLabel.CENTER);
 		authors.setBounds(0, 100, Window.resolution.width, 200);
+		authors.setForeground(Color.WHITE);
 		add(authors);
 		
 		//Artificial
@@ -41,6 +53,7 @@ public class TabAuthors extends WindowTab {
 		authors.setFont(specialAuthorsFont);
 		authors.setHorizontalAlignment(JLabel.CENTER);
 		authors.setBounds(0, 150, Window.resolution.width, 200);
+		authors.setForeground(Color.WHITE);
 		add(authors);
 		
 		//HUKUTKA
@@ -48,8 +61,20 @@ public class TabAuthors extends WindowTab {
 		authors.setFont(specialAuthorsFont);
 		authors.setHorizontalAlignment(JLabel.CENTER);
 		authors.setBounds(0, 200, Window.resolution.width, 200);
+		authors.setForeground(Color.WHITE);
 		add(authors);
+		
+		try {
+			background = ImageIO.read(Window.class.getResource("sprites/background.png"));
+		} catch (Exception e) {}
 	}
+	
+	//CFG3
+	@Override
+	public void paintComponent(Graphics g) {
+		g.drawImage(background, 0, 0, Window.resolution.width, Window.resolution.height, null);
+	}
+	
 }
 
 //CFG 4
