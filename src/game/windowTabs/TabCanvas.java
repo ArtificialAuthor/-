@@ -22,40 +22,21 @@ public class TabCanvas extends WindowTab{
 	ArrayList<GameObject> scene = new ArrayList<GameObject>();
 	BufferedImage background;
 	public TabPause tabPause = new TabPause(this);
+	int[] xPaint = {200,300,400,500};
+	int[] yPoint = {300,250,350,550};
+	int countPoint = 4;
 	
 	//CFG 2
 	public TabCanvas() {
 		//Подготовка
-		setLayout(null);
-		add(tabPause);
-		try {
-			background = ImageIO.read(Window.class.getResource("sprites/background.png"));
-		} catch (Exception e) {};
-		
-		//Объекты на сцене
-		GameObject earth = new GameObject("earth");
-		earth.size[0] = 640;
-		earth.size[1] = 640;
-		earth.rotation = .25d;
-		earth.setTexture("moon.png");
-		scene.add(earth);
-		
-		GameObject player = new GameObject("player");
-		PhysicalBody playerBody = new PhysicalBody();
-		player.addBehavivour(playerBody);
-		player.size[0] = 20;
-		player.size[1] = 20;
-		player.setTexture("ship.png");
-		scene.add(player);
-		physicsEngine.add(player);
-		cameraLocked = player;
-		
+		GameObject kek = new GameObject();
+		scene.add(kek);
 		//Запуск
 		physicsEngine.start();
 		addMouseWheelListener(new ListenScaling(this));
 		addKeyListener(new ListenKeys(this));
 		ListenMouse controllingMouse = new ListenMouse(this);
-		controllingMouse.setControls(playerBody);
+
 		addMouseListener(controllingMouse);
 	}
 	
@@ -65,6 +46,7 @@ public class TabCanvas extends WindowTab{
 	public void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.drawImage(background, 0, 0, Window.resolution.width, Window.resolution.height, null);
+		g2.fillPolygon(xPaint, yPoint, countPoint);
 		//Задать координаты
 		if (cameraLocked != null) {
 			cameraPosition[0] = cameraLocked.position[0];
@@ -99,12 +81,7 @@ public class TabCanvas extends WindowTab{
 					);
 				} else {
 					//У объекта нет текстура
-					g2.fillRect(
-						x,
-						y,
-						(int)(obj.size[1] * cameraViewScale),
-						(int)(obj.size[0] * cameraViewScale)
-					);
+					g2.fillPolygon(obj.shape.dots[0], obj.shape.dots[1], obj.shape.dots.length);
 				}
 				g2.rotate(-obj.rotation,
 					swapX,

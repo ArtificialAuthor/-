@@ -14,6 +14,7 @@ public class GameObject {
 	public double size[] = {0, 0};
 	public double rotation = 0;
 	public BufferedImage texture;
+	public Shape shape = Shape.cube();
 	private ArrayList<Behavivour> behavivour = new ArrayList<Behavivour>();
 	
 	//CFG 2
@@ -68,5 +69,5 @@ public class GameObject {
 			}
 		}
 		return false;
-	}	
+	}
 }
