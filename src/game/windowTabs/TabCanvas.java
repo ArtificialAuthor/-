@@ -29,8 +29,8 @@ public class TabCanvas extends WindowTab{
 		//Подготовка
 		GameObject kek = new GameObject();
 		scene.add(kek);
-		kek.position[0] = 50;
-		kek.position[1] = 300;
+		kek.position[0] = 400;
+		kek.position[1] = 400;
 		kek.size[0] = 100;
 		kek.size[1] = 100;
 		//Запуск
@@ -47,7 +47,9 @@ public class TabCanvas extends WindowTab{
 	@Override
 	public void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
+		g2.clearRect(0,0,Window.resolution.width,Window.resolution.height);
 		for (GameObject obj : scene) {
+//			obj.rotation += .01d;
 			int[] pointX = new int[obj.shape.a.length];
 			int[] pointY = new int[obj.shape.a.length];
 			for (int dot=0; dot<obj.shape.a.length; dot++){

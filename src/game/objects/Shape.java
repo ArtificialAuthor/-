@@ -21,6 +21,7 @@ public class Shape {
             setR[i] = newR;
         }
         r = setR;
+        a = newA;
     }
 
     //CFG3
@@ -28,7 +29,7 @@ public class Shape {
         double newR = .5d * Math.pow(2, 1 / 2d);
         double[] newA = new double[4];
         for (int ang = 0; ang < 4; ang++) {
-            newA[ang] = Math.PI * 4 * (1 + 2 * ang);
+            newA[ang] = Math.PI / 4 * (1 + 2 * ang);
         }
         return new Shape(newR, newA);
     }

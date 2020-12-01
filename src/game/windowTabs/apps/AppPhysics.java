@@ -30,6 +30,7 @@ public class AppPhysics implements Runnable {
 		try {
 			while (active) {
 				Thread.sleep(10);
+				attached.repaint();
 				//Проход через все тела
 				for (int objThis = 0; objThis < currentLng; objThis++) {
 					//Сначала PhysicalBody
