@@ -10,6 +10,7 @@ import java.awt.Graphics2D;
 import java.awt.MouseInfo;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.lang.Math;
 import javax.imageio.ImageIO;
 
 //Класс - холст для обрисовки объектов
@@ -22,15 +23,16 @@ public class TabCanvas extends WindowTab{
 	ArrayList<GameObject> scene = new ArrayList<GameObject>();
 	BufferedImage background;
 	public TabPause tabPause = new TabPause(this);
-	int[] xPaint = {200,300,400,500};
-	int[] yPoint = {300,250,350,550};
-	int countPoint = 4;
 	
 	//CFG 2
 	public TabCanvas() {
 		//Подготовка
 		GameObject kek = new GameObject();
 		scene.add(kek);
+		kek.position[0] = 50;
+		kek.position[1] = 300;
+		kek.size[0] = 100;
+		kek.size[1] = 100;
 		//Запуск
 		physicsEngine.start();
 		addMouseWheelListener(new ListenScaling(this));
@@ -45,52 +47,18 @@ public class TabCanvas extends WindowTab{
 	@Override
 	public void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
-		g2.drawImage(background, 0, 0, Window.resolution.width, Window.resolution.height, null);
-		g2.fillPolygon(xPaint, yPoint, countPoint);
-		//Задать координаты
-		if (cameraLocked != null) {
-			cameraPosition[0] = cameraLocked.position[0];
-			cameraPosition[1] = cameraLocked.position[1];
-		}
-		//Рендеринг
 		for (GameObject obj : scene) {
-			int x = (int)((cameraPosition[0] - obj.position[0] - obj.size[0]/2) * cameraViewScale + Window.resolution.width / 2);
-			int y = (int)((cameraPosition[1] - obj.position[1] - obj.size[1]/2) * cameraViewScale + Window.resolution.height / 2);
-			if (
-				//Фильтрация рендеринга
-				x >= -obj.size[0] * cameraViewScale &
-				y >= -obj.size[1] * cameraViewScale &
-				x - obj.size[0] * cameraViewScale <= Window.resolution.width / 2 &
-				y - obj.size[1] * cameraViewScale <= Window.resolution.height / 2
-			) {
-				int swapX = (int)((cameraPosition[0] - obj.position[0]) * cameraViewScale + Window.resolution.width / 2);
-				int swapY = (int)((cameraPosition[1] - obj.position[1]) * cameraViewScale + Window.resolution.height / 2);
-				g2.rotate(obj.rotation,
-					swapX,
-					swapY
-				);
-				if (obj.texture != null) {
-					//У объекта есть текстура
-					g2.drawImage(
-						obj.texture,
-						x,
-						y,
-						(int)(obj.size[1] * cameraViewScale),
-						(int)(obj.size[0] * cameraViewScale),
-						null
-					);
-				} else {
-					//У объекта нет текстура
-					g2.fillPolygon(obj.shape.dots[0], obj.shape.dots[1], obj.shape.dots.length);
-				}
-				g2.rotate(-obj.rotation,
-					swapX,
-					swapY
-				);
+			int[] pointX = new int[obj.shape.a.length];
+			int[] pointY = new int[obj.shape.a.length];
+			for (int dot=0; dot<obj.shape.a.length; dot++){
+				pointX[dot] = (int)(obj.position[0] + Math.cos(obj.shape.a[dot]+obj.rotation)*obj.shape.r[dot]*obj.size[0]);
+				pointY[dot] = (int)(obj.position[1] + Math.sin(obj.shape.a[dot]+obj.rotation)*obj.shape.r[dot]*obj.size[1]);
 			}
+			g2.fillPolygon(pointX, pointY, pointX.length);
 		}
+
 	}
-}
+
 
 //CFG 4
 //Слушатель мыши
@@ -182,4 +150,5 @@ class ListenKeys implements java.awt.event.KeyListener {
 	public void keyReleased(java.awt.event.KeyEvent e) {}
 	@Override
 	public void keyTyped(java.awt.event.KeyEvent e) {}
+}
 }
