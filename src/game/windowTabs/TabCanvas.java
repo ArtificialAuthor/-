@@ -1,156 +1,163 @@
-//Код Artificial
+//Code by Artificial
 //CFG 0
 package game.windowTabs;
 import game.Window;
 import game.windowTabs.apps.AppPhysics;
-import game.objects.*;
-import game.objects.behavivours.*;
+import game.objects.GameObject;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.MouseInfo;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.lang.Math;
-import javax.imageio.ImageIO;
 
-//Класс - холст для обрисовки объектов
-public class TabCanvas extends WindowTab{
+//Class - Canvas, holds objects and more.
+public class TabCanvas extends WindowTab implements Runnable{
 	//CFG 1
-	double cameraPosition[] = {0, 0};
-	double cameraViewScale = 1;
-	GameObject cameraLocked = null;
-	AppPhysics physicsEngine = new AppPhysics(this);
+	//Camera
+	int FPSLimit = 30;
+	//Sources
 	ArrayList<GameObject> scene = new ArrayList<GameObject>();
-	BufferedImage background;
+	AppPhysics physicsEngine = new AppPhysics(this);
 	public TabPause tabPause = new TabPause(this);
+	//Controls
+	MSC msc = new MSC();
+	KC kc = new KC();
+	
 	
 	//CFG 2
 	public TabCanvas() {
-		//Подготовка
+		//Filling scene
 		GameObject kek = new GameObject();
 		scene.add(kek);
-		kek.position[0] = 400;
-		kek.position[1] = 400;
+		kek.position[0] = 0;
+		kek.position[1] = 0;
 		kek.size[0] = 100;
 		kek.size[1] = 100;
-		//Запуск
+		
+		kek = new GameObject();
+		scene.add(kek);
+		kek.position[0] = 200;
+		kek.position[1] = 0;
+		kek.size[0] = 200;
+		kek.size[1] = 100;
+		
+		//Launching cores
 		physicsEngine.start();
-		addMouseWheelListener(new ListenScaling(this));
-		addKeyListener(new ListenKeys(this));
-		ListenMouse controllingMouse = new ListenMouse(this);
-
-		addMouseListener(controllingMouse);
+		new Thread(this).start();
+		addMouseWheelListener(msc);
+		addKeyListener(kc);
 	}
 	
 	//CFG 3
-	//Обрисовка
-	@Override
-	public void paintComponent(Graphics g) {
-		Graphics2D g2 = (Graphics2D) g;
-		g2.clearRect(0,0,Window.resolution.width,Window.resolution.height);
-		for (GameObject obj : scene) {
-//			obj.rotation += .01d;
-			int[] pointX = new int[obj.shape.a.length];
-			int[] pointY = new int[obj.shape.a.length];
-			for (int dot=0; dot<obj.shape.a.length; dot++){
-				pointX[dot] = (int)(obj.position[0] + Math.cos(obj.shape.a[dot]+obj.rotation)*obj.shape.r[dot]*obj.size[0]);
-				pointY[dot] = (int)(obj.position[1] + Math.sin(obj.shape.a[dot]+obj.rotation)*obj.shape.r[dot]*obj.size[1]);
-			}
-			g2.fillPolygon(pointX, pointY, pointX.length);
-		}
-
-	}
-
-
-//CFG 4
-//Слушатель мыши
-class ListenMouse implements java.awt.event.MouseListener, Runnable {
-	//CFG 1
-	TabCanvas connectedWith;
-	PhysicalBody connectedControls;
-	boolean active = false;
-	
-	//CFG 2
-	public ListenMouse(TabCanvas connectTo) {
-		connectedWith = connectTo;
-	}
-	
-	//CFG 3
-	//Поток
+	//Rendering, PART I
 	@Override
 	public void run() {
 		try {
-			while(active) {
-				double vec[] = {
-					Window.resolution.width / 2 - MouseInfo.getPointerInfo().getLocation().x,
-					Window.resolution.height / 2 - MouseInfo.getPointerInfo().getLocation().y
- 				};
-				double lng = Math.pow(vec[0] * vec[0] + vec[1] * vec[1], .5d);
-				connectedControls.velocity[0] += vec[0] / lng / 100;
-				connectedControls.velocity[1] += vec[1] / lng / 100;
-				Thread.sleep(11);
+			while (true) {
+				Thread.sleep(1000/FPSLimit);
+				repaint();
 			}
 		} catch (InterruptedException e) {}
 	}
-	//Передать управление
-	public void setControls(PhysicalBody setControls) {
-		connectedControls = setControls;
+	//Rendering, PART II
+	@Override
+	public void paintComponent(Graphics g) {
+		//Preparing canvas
+		Graphics2D g2 = (Graphics2D) g;
+		g2.clearRect(0,0,Window.resolution.width,Window.resolution.height);
+		//Preparing camera
+		if (kc.cLock != null) {
+			kc.cPos[0] = kc.cPos[0];
+			kc.cPos[1] = kc.cPos[1];
+		}
+		//Rendering objects
+		for (GameObject obj : scene) {
+			if (obj.shape != null) {
+				//Prepare
+				double[] rPos = {
+					(obj.position[0] + kc.cPos[0]) * msc.cScale + Window.resolution.width/2,
+					(obj.position[1] + kc.cPos[1]) * msc.cScale + Window.resolution.height/2,	
+				};
+				//Object has shape
+				int[] pointX = new int[obj.shape.a.length];
+				int[] pointY = new int[obj.shape.a.length];
+				for (int dot=0; dot<obj.shape.a.length; dot++){
+					pointX[dot] = (int)(rPos[0] + Math.cos(obj.shape.a[dot]+obj.rotation)*obj.shape.r[dot]*obj.size[0] * msc.cScale);
+					pointY[dot] = (int)(rPos[1] + Math.sin(obj.shape.a[dot]+obj.rotation)*obj.shape.r[dot]*obj.size[1] * msc.cScale);
+				}
+				g2.fillPolygon(pointX, pointY, pointX.length);
+			}
+		}
+
 	}
-	//Тело
-	public void mouseReleased(java.awt.event.MouseEvent e) {
-		active = false;
-	}
-	public void mousePressed(java.awt.event.MouseEvent e) {
-		active = true;
-		new Thread(this).start();
-	}
-	public void mouseClicked(java.awt.event.MouseEvent e) {}
-	public void mouseExited(java.awt.event.MouseEvent e) {}
-	public void mouseEntered(java.awt.event.MouseEvent e) {}
 }
-//Слушатель масштабирования
-class ListenScaling implements java.awt.event.MouseWheelListener {
+
+//CFG 4
+//Class - Mouse Scroll Control [MSC, for short]
+class MSC implements java.awt.event.MouseWheelListener {
 	//CFG 1
-	TabCanvas connectedWith;
-	
-	//CFG 2
-	public ListenScaling(TabCanvas connectTo) {
-		connectedWith = connectTo;
-	}
+	double cScale = 1;
+	double cMinZoom = 0.01;
+	double cMaxZoom = 10;
 	
 	//CFG 3
 	public void mouseWheelMoved(java.awt.event.MouseWheelEvent e) {
-		double dir = -e.getUnitsToScroll() / 100d;
-		if (dir < 0 & connectedWith.cameraViewScale + dir > 0) {
-			connectedWith.cameraViewScale += dir;
-		} else if (dir > 0 & connectedWith.cameraViewScale + dir < 4) {
-			connectedWith.cameraViewScale += dir;
+		cScale += e.getUnitsToScroll() / 50d * cScale;
+		if (cScale < cMinZoom) {
+			cScale = cMinZoom;
 		}
 	}
 }
-//Слушатель управления клавиатурой
-class ListenKeys implements java.awt.event.KeyListener {
+
+//Class -Key Control [KC, for short] 
+class KC implements java.awt.event.KeyListener {
 	//CFG 1
-	TabCanvas connectedWith;
-	
-	//CFG 2
-	public ListenKeys(TabCanvas connectTo) {
-		connectedWith = connectTo; 
-	}
+	double[] cPos = {0, 0};
+	GameObject cLock;
+	boolean[] down = {
+		false, //Forward
+		false, //Backward
+		false, //Left
+		false  //Right
+	};
+	int[] keys = {
+		87,
+		83,
+		65,
+		68
+	};
 	
 	//CFG 3
-	//Тело
-	@Override
 	public void keyPressed(java.awt.event.KeyEvent e) {
-		int code = e.getKeyCode();
-		if (code == 27) {
-			connectedWith.physicsEngine.stop();
-			connectedWith.tabPause.setVisible(true);
+		int key = e.getKeyCode();
+		for (int isThisKey = 0; isThisKey < keys.length; isThisKey++) {
+			if (keys[isThisKey] == key) {
+				down[isThisKey] = true;
+				action(isThisKey);
+				break;
+			}
 		}
 	}
-	@Override
-	public void keyReleased(java.awt.event.KeyEvent e) {}
-	@Override
+	public void keyReleased(java.awt.event.KeyEvent e) {
+		int key = e.getKeyCode();
+		for (int isThisKey = 0; isThisKey < keys.length; isThisKey++) {
+			if (keys[isThisKey] == key) {
+				down[isThisKey] = false;
+				action(isThisKey);
+				break;
+			}
+		}
+	}
+	//empty
 	public void keyTyped(java.awt.event.KeyEvent e) {}
-}
+	void action(int code) {
+		if (code == 0) {
+			cPos[1] += 1;
+		} else if (code == 1) {
+			cPos[1] -= 1;
+		} else if (code == 2) {
+			cPos[0] += 1;
+		} else if (code == 3) {
+			cPos[0] -= 1;
+		}
+	}
 }

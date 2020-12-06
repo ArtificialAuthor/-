@@ -1,9 +1,9 @@
-//Код Artificial
+//Code by Artificial
 //CFG 0
 package game.objects;
 import java.util.ArrayList;
 
-//Класс - игровой объект
+//Class - GameObject, holds main information about object & its behavivour
 public class GameObject {
 	//CFG 1
 	public String name = "GameObject";
@@ -14,24 +14,21 @@ public class GameObject {
 	private ArrayList<Behavivour> behavivour = new ArrayList<Behavivour>();
 	
 	//CFG 2
-	//Без имени
+	//Noname
 	public GameObject() {}
-	//Именной
+	//Named
 	public GameObject(String setName) {
 		name = setName;
 	}
 	
 	//CFG 3
-	//CИСТЕМЫ ОБРИСОВКИ
-
-	//СИСТЕМЫ ПОВЕДЕНИЯ
-	//Добавить поведение
+	//BEHAVIVOUR SYSTEMS
+	//Add behavivour
 	public void addBehavivour(Behavivour beh) {
 		beh.attached = this;
 		behavivour.add(beh);
 	}
-	//Удалить поведение
-	//Вариант, когда утеряна ссылка на поведение
+	//Remove behavivour [No link]
 	public void remBehavivour(String removingBehavivourID) {
 		for (Behavivour beh : behavivour) {
 			if(beh.ID == removingBehavivourID) {
@@ -39,20 +36,20 @@ public class GameObject {
 			}
 		}
 	}
-	//Вариант, когда есть ссылка на поведение
+	//Remove behavivour [Linked]
 	public void remBehavivour(Behavivour removingBehavivour) {
 		behavivour.remove(removingBehavivour);
 	}
-	//Выдернуть поведение
+	//Get behavivour
 	public Behavivour getBehavivour(String behavivourID) throws Exception {
 		for (Behavivour beh : behavivour) {
 			if(beh.ID == behavivourID) {
 				return beh;
 			}
 		}
-		throw new Exception("У "+name+" нет поведения "+behavivourID+"!");
+		throw new Exception(name+" hasn't "+behavivourID+" behavivour!");
 	}
-	//Проверить поведение
+	//Check behavivour
 	public boolean hasBehavivour(String behavivourID) {
 		for (Behavivour beh : behavivour) {
 			if(beh.ID == behavivourID) {
