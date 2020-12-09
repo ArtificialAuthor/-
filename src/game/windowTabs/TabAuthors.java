@@ -1,38 +1,28 @@
-//Код Artt
-//Зависимости
+//CFG 0
 package game.windowTabs;
-import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import game.Window;
-
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.awt.color.*;
 
-//Код - панель с авторами
-public class TabAuthors extends WindowTab {
-	//CFG1
-	BufferedImage background;
-		
+//Class - TabAuthors - contains information abour team who was working on project
+public class TabAuthors extends WindowTab {	
 	//CFG 2
 	public TabAuthors() {
-		//Подготовка
+		//Preparing
 		setLayout(null);
 		Font specialAuthorsFont = new Font("Times New Roman", Font.ITALIC, 40);
 		
-		
-		//Кнопка "Назад"
+		//The "Back" button
 		JButton back = new JButton("Назад");
 		back.setFont(defaultButtonFont);
 		back.setBounds(Window.resolution.width/2-75, Window.resolution.height/10*9, 150, 50);
-		back.addActionListener(new ListenBackFrom1());
+		back.addActionListener(new BFA());
 		add(back);
 		
-		//Лавры
-		//Шапка
+		//Authors
+		//Cap
 		JLabel authors = new JLabel("Авторы");
 		authors.setFont(defaultTextFont);
 		authors.setHorizontalAlignment(JLabel.CENTER);
@@ -55,33 +45,14 @@ public class TabAuthors extends WindowTab {
 		authors.setBounds(0, 150, Window.resolution.width, 200);
 		authors.setForeground(Color.WHITE);
 		add(authors);
-		
-		//HUKUTKA
-		authors = new JLabel("HUKUTKA (кушал)");
-		authors.setFont(specialAuthorsFont);
-		authors.setHorizontalAlignment(JLabel.CENTER);
-		authors.setBounds(0, 200, Window.resolution.width, 200);
-		authors.setForeground(Color.WHITE);
-		add(authors);
-		
-		try {
-			background = ImageIO.read(Window.class.getResource("sprites/background.png"));
-		} catch (Exception e) {}
 	}
-	
-	//CFG3
-	@Override
-	public void paintComponent(Graphics g) {
-		g.drawImage(background, 0, 0, Window.resolution.width, Window.resolution.height, null);
-	}
-	
 }
 
 //CFG 4
-//Слушатель кнопки "Назад"
-class ListenBackFrom1 implements java.awt.event.ActionListener {
+//Listener - BFA [Back From Authors]
+class BFA implements java.awt.event.ActionListener {
 	@Override 
 	public void actionPerformed(java.awt.event.ActionEvent e) {
-		Window.self.switchTab(0); //0 - ID панели с гл. менюшкой
+		Window.self.switchTab(0); //0 - ID of main menu panel
 	}
 }

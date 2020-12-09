@@ -1,24 +1,22 @@
-//Зависимости
+//CFG 0
 package game.windowTabs.apps;
 import java.util.ArrayList;
-import game.windowTabs.WindowTab;
 import game.objects.GameObject;
 import game.objects.behavivours.*;
 
-//Класс - игровая физика
+//Class - AppPhysics - the game physics engine
 public class AppPhysics implements Runnable {
 	//CFG 1
-	WindowTab attached;
-	boolean active = false;
+	ArrayList<GameObject> scene;
+	public boolean active = true;
 	
 	//!ВНИМАНИЕ!
 	//ЛИСТЫ - КОНФИНГУРАТОРЫ, ПРОСЬБА НЕ ТРОГАТЬ!
 	ArrayList<PhysicalBody> PhysicalBodies = new ArrayList<PhysicalBody>();
 	
-	
 	//CFG 2
-	public AppPhysics(WindowTab attachWith) {
-		attached = attachWith;
+	public AppPhysics(ArrayList<GameObject> scene) {
+		this.scene = scene;
 	}
 	
 	//CFG 3
@@ -32,14 +30,5 @@ public class AppPhysics implements Runnable {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-	}
-	//Запуск
-	public void start() {
-		active = true;
-		new Thread(this).start();
-	}
-	//Завершение
-	public void stop() {
-		active = false;
 	}
 }

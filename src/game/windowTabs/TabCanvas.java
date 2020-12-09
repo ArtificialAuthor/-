@@ -1,4 +1,3 @@
-//Code by Artificial
 //CFG 0
 package game.windowTabs;
 import game.Window;
@@ -16,15 +15,19 @@ public class TabCanvas extends WindowTab implements Runnable{
 	int FPSLimit = 30;
 	//Sources
 	ArrayList<GameObject> scene = new ArrayList<GameObject>();
-	AppPhysics physicsEngine = new AppPhysics(this);
+	AppPhysics physicsEngine = new AppPhysics(scene);
 	public TabPause tabPause = new TabPause(this);
 	//Controls
 	MSC msc = new MSC();
-	KC kc = new KC();
+	KC kc = new KC(this);
 	
 	
 	//CFG 2
 	public TabCanvas() {
+		//Pre - settings
+		setLayout(null);
+		add(tabPause);
+		
 		//Filling scene
 		GameObject kek = new GameObject();
 		scene.add(kek);
@@ -41,7 +44,6 @@ public class TabCanvas extends WindowTab implements Runnable{
 		kek.size[1] = 100;
 		
 		//Launching cores
-		physicsEngine.start();
 		new Thread(this).start();
 		addMouseWheelListener(msc);
 		addKeyListener(kc);
@@ -111,53 +113,81 @@ class MSC implements java.awt.event.MouseWheelListener {
 //Class -Key Control [KC, for short] 
 class KC implements java.awt.event.KeyListener {
 	//CFG 1
+	TabCanvas attached;
 	double[] cPos = {0, 0};
 	GameObject cLock;
-	boolean[] down = {
+	boolean[] hldStates = {
 		false, //Forward
 		false, //Backward
 		false, //Left
 		false  //Right
 	};
-	int[] keys = {
+	int[] hld = { //Key codes, that can be held
 		87,
 		83,
 		65,
 		68
 	};
+	int[] tpd = { //Key codes, that can't be held
+		27
+	};
+	
+	//CFG 2
+	public KC(TabCanvas attach) {
+		attached = attach;
+	}
 	
 	//CFG 3
+	//HLD down & TPD
 	public void keyPressed(java.awt.event.KeyEvent e) {
 		int key = e.getKeyCode();
-		for (int isThisKey = 0; isThisKey < keys.length; isThisKey++) {
-			if (keys[isThisKey] == key) {
-				down[isThisKey] = true;
-				action(isThisKey);
-				break;
+		for (int isIt = 0; isIt < hld.length; isIt++) {
+			if (hld[isIt] == key) {
+				hldStates[isIt] = true;
+				action(isIt, true);
+				return;
+			}
+		}
+		for (int isIt = 0; isIt < tpd.length; isIt++) {
+			if (tpd[isIt] == key) {
+				action(isIt, false);
+				return;
 			}
 		}
 	}
+	//HLD up
 	public void keyReleased(java.awt.event.KeyEvent e) {
 		int key = e.getKeyCode();
-		for (int isThisKey = 0; isThisKey < keys.length; isThisKey++) {
-			if (keys[isThisKey] == key) {
-				down[isThisKey] = false;
-				action(isThisKey);
-				break;
+		for (int isIt = 0; isIt < hld.length; isIt++) {
+			if (hld[isIt] == key) {
+				hldStates[isIt] = false;
+				action(isIt, true);
+				return;
 			}
 		}
 	}
 	//empty
 	public void keyTyped(java.awt.event.KeyEvent e) {}
-	void action(int code) {
-		if (code == 0) {
-			cPos[1] += 1;
-		} else if (code == 1) {
-			cPos[1] -= 1;
-		} else if (code == 2) {
-			cPos[0] += 1;
-		} else if (code == 3) {
-			cPos[0] -= 1;
+	//Action
+	void action(int code, boolean type) {
+		if (type) {
+			//HLD type
+			if (code == 0) {
+				cPos[1] += 1; //W
+			} else if (code == 1) {
+				cPos[1] -= 1; //S
+			} else if (code == 2) {
+				cPos[0] += 1; //D
+			} else if (code == 3) {
+				cPos[0] -= 1; //A
+			}
+		} else {
+			//TPD type
+			if (code == 0) {
+				//ESC
+				attached.tabPause.setVisible(attached.physicsEngine.active);
+				attached.physicsEngine.active = !attached.physicsEngine.active;
+			}
 		}
 	}
 }

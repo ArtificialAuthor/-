@@ -1,9 +1,8 @@
-//Code by Artificial
 //CFG 0
 package game.objects;
 import java.util.ArrayList;
 
-//Class - GameObject, holds main information about object & its behavivour
+//Class - GameObject - holds main information about object & its behavivour
 public class GameObject {
 	//CFG 1
 	public String name = "GameObject";
