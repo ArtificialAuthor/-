@@ -12,6 +12,7 @@ public final class Window extends javax.swing.JFrame{
 	public static Dimension resolution = Toolkit.getDefaultToolkit().getScreenSize();
 	public static int current = 0; //Current panel ID, must be 0 for displaying main menu
 	public static ArrayList<WindowTab> tabs = new ArrayList<WindowTab>(); //List of all possible panels with IDs equals their index
+	public static String location;
 	
 	//CFG 2
 	public Window() {
@@ -37,6 +38,16 @@ public final class Window extends javax.swing.JFrame{
 		self = new Window();
 		self.add(tabs.get(0));
 		self.pack();
+		//Getting game location
+		location = Window.class.getResource("Window.class").getPath();
+		location = location.substring(0, location.length() - "/game/Window.class".length());
+		int pLast = 1;
+		int pFind = location.indexOf("/", pLast);
+		while (pFind != -1) {
+			pLast = pFind+1;
+			pFind = location.indexOf("/", pLast);
+		}
+		location = location.substring(0, pLast);
 	}
 	//Set panel through ID
 	public void switchTab(int newTab) {
