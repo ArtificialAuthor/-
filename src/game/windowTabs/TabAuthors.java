@@ -15,7 +15,7 @@ public class TabAuthors extends WindowTab {
 		Font specialAuthorsFont = new Font("Times New Roman", Font.ITALIC, 40);
 		
 		//The "Back" button
-		JButton back = new JButton("Назад");
+		JButton back = new JButton(Window.translator.load("Authors.BackButton"));
 		back.setFont(defaultButtonFont);
 		back.setBounds(Window.resolution.width/2-75, Window.resolution.height/10*9, 150, 50);
 		back.addActionListener(new BFA());
@@ -23,7 +23,7 @@ public class TabAuthors extends WindowTab {
 		
 		//Authors
 		//Cap
-		JLabel authors = new JLabel("Авторы");
+		JLabel authors = new JLabel(Window.translator.load("Authors.Title"));
 		authors.setFont(defaultTextFont);
 		authors.setHorizontalAlignment(JLabel.CENTER);
 		authors.setBounds(0, 0, Window.resolution.width, 200);
@@ -31,7 +31,7 @@ public class TabAuthors extends WindowTab {
 		add(authors);
 		
 		//Artt
-		authors = new JLabel("Artt (код)");
+		authors = new JLabel("Artt ("+Window.translator.load("Authors.Code")+")");
 		authors.setFont(specialAuthorsFont);
 		authors.setHorizontalAlignment(JLabel.CENTER);
 		authors.setBounds(0, 100, Window.resolution.width, 200);
@@ -39,7 +39,7 @@ public class TabAuthors extends WindowTab {
 		add(authors);
 		
 		//Artificial
-		authors = new JLabel("Artificial (код)");
+		authors = new JLabel("Artificial ("+Window.translator.load("Authors.Code")+")");
 		authors.setFont(specialAuthorsFont);
 		authors.setHorizontalAlignment(JLabel.CENTER);
 		authors.setBounds(0, 150, Window.resolution.width, 200);

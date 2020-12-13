@@ -12,21 +12,21 @@ public class TabMainMenu extends WindowTab {
 		
 		
 		//The "Leave game" button
-		JButton exit = new JButton("Quit");
+		JButton exit = new JButton(Window.translator.load("MainMenu.Quit"));
 		exit.setBounds(Window.resolution.width/2-75, Window.resolution.height/2+100, 150, 50);
 		exit.addActionListener(new QG());
 		exit.setFont(defaultButtonFont);
 		add(exit);
 		
 		//The "Authors" button
-		JButton athors = new JButton("Athors");
+		JButton athors = new JButton(Window.translator.load("MainMenu.Authors"));
 		athors.setBounds(Window.resolution.width/2-75, Window.resolution.height/2, 150, 50);
 		athors.addActionListener(new AP());
 		athors.setFont(defaultButtonFont);
 		add(athors);
 		
 		//The "Play" button
-		JButton play = new JButton("Play");
+		JButton play = new JButton(Window.translator.load("MainMenu.Play"));
 		play.setBounds(Window.resolution.width/2-75, Window.resolution.height/2-100, 150, 50);
 		play.addActionListener(new PG());
 		play.setFont(defaultButtonFont);

@@ -28,21 +28,6 @@ public class TabCanvas extends WindowTab implements Runnable{
 		setLayout(null);
 		add(tabPause);
 		
-		//Filling scene
-		GameObject kek = new GameObject();
-		scene.add(kek);
-		kek.position[0] = 0;
-		kek.position[1] = 0;
-		kek.size[0] = 100;
-		kek.size[1] = 100;
-		
-		kek = new GameObject();
-		scene.add(kek);
-		kek.position[0] = 200;
-		kek.position[1] = 0;
-		kek.size[0] = 200;
-		kek.size[1] = 100;
-		
 		//Launching cores
 		new Thread(this).start();
 		addMouseWheelListener(msc);

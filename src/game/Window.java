@@ -13,6 +13,8 @@ public final class Window extends javax.swing.JFrame{
 	public static int current = 0; //Current panel ID, must be 0 for displaying main menu
 	public static ArrayList<WindowTab> tabs = new ArrayList<WindowTab>(); //List of all possible panels with IDs equals their index
 	public static String location;
+	//Service classes
+	public static Translator translator;
 	
 	//CFG 2
 	public Window() {
@@ -22,6 +24,9 @@ public final class Window extends javax.swing.JFrame{
 		setUndecorated(true);
 		setVisible(true);
 		setPreferredSize(resolution);
+		
+		//Loading service classes
+		translator = new Translator("ru");
 		
 		//Panel loading & IDs
 		tabs.add(new TabMainMenu()); //0
@@ -35,9 +40,6 @@ public final class Window extends javax.swing.JFrame{
 	//CFG 3
 	//Launching from here
 	public static void main(String args[]) {
-		self = new Window();
-		self.add(tabs.get(0));
-		self.pack();
 		//Getting game location
 		location = Window.class.getResource("Window.class").getPath();
 		location = location.substring(0, location.length() - "/game/Window.class".length());
@@ -48,6 +50,10 @@ public final class Window extends javax.swing.JFrame{
 			pFind = location.indexOf("/", pLast);
 		}
 		location = location.substring(0, pLast);
+		//Getting game cores
+		self = new Window();
+		self.add(tabs.get(0));
+		self.pack();
 	}
 	//Set panel through ID
 	public void switchTab(int newTab) {

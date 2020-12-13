@@ -18,21 +18,21 @@ public class TabPause extends WindowTab {
 		setBounds(Window.resolution.width / 2 - Window.resolution.width/8, Window.resolution.height / 2 - Window.resolution.height / 4, Window.resolution.width / 4, Window.resolution.height / 2);
 		
 		//Шапка
-		JLabel pause = new JLabel("Пауза");
+		JLabel pause = new JLabel(Window.translator.load("TabPause.Title"));
 		pause.setFont(specialPauseFont);
 		pause.setHorizontalAlignment(JLabel.CENTER);
 		pause.setBounds(0, 0,  Window.resolution.width / 4, Window.resolution.height / 6);
 		add(pause);
 		
 		// Кнопка "Продолжить"
-		JButton next = new JButton("Продолжить");
+		JButton next = new JButton(Window.translator.load("TabPause.Continue"));
 		next.setFont(defaultButtonFont);
 		next.setBounds(Window.resolution.height/8-(Window.resolution.width / 32*5)/128*32, (Window.resolution.height / 2)/3+((Window.resolution.height / 2)/3)/2-15 , Window.resolution.width / 32*5, Window.resolution.height / 12);
 		next.addActionListener(new CG(attach));
 		add(next);
 		
 		// Кнопка "Выход в меню"
-		JButton exit = new JButton("Выйти в меню");
+		JButton exit = new JButton(Window.translator.load("TabPause.Leave"));
 		exit.setFont(defaultButtonFont);
 		exit.setBounds(Window.resolution.height/8-(Window.resolution.width / 64*11)/128*51, (Window.resolution.height / 2)/3*2+((Window.resolution.height / 2)/3)/2-15 , Window.resolution.width / 64*12, Window.resolution.height / 12);
 		exit.addActionListener(new EG());
