@@ -1,0 +1,29 @@
+object
+	name RotatingObject
+	position 100 , 0
+	size 100 , 100
+	rotation 0.44
+	behavivour physicalBody
+		velocity 0 , 0
+		angularVelocity 0.1
+object
+	name StaticRotatedObject
+	position -100 , 0
+	size 50 , 50
+	rotation 0.88
+object
+	name EscapingObject
+	position 200 , -50
+	size 50 , 50
+	rotation 0.22
+	behavivour physicalBody
+		velocity 0 , 1
+		angularVelocity 0
+object
+	name EscapingRotatingObject
+	position -200 , 50
+	size 90 , 100
+	rotation 0
+	behavivour physicalBody
+		velocity 0 , -1
+		angularVelocity -0.1 
