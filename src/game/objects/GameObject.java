@@ -1,6 +1,7 @@
 //CFG 0
 package game.objects;
 import java.util.ArrayList;
+import game.objects.behavivours.Behavivour;
 
 //Class - GameObject - holds main information about object & its behavivour
 public class GameObject {
@@ -41,6 +42,11 @@ public class GameObject {
 	}
 	//Get behavivour
 	public Behavivour getBehavivour(String behavivourID) throws Exception {
+		//By flag
+		if (behavivourID == "latest") {
+			return behavivour.get(behavivour.size()-1);
+		}
+		//By ID
 		for (Behavivour beh : behavivour) {
 			if(beh.ID == behavivourID) {
 				return beh;

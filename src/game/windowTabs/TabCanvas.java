@@ -1,12 +1,12 @@
 //CFG 0
 package game.windowTabs;
+import game.SceneLoader;
 import game.Window;
 import game.windowTabs.apps.AppPhysics;
 import game.objects.GameObject;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
-import java.lang.Math;
 
 //Class - Canvas, holds objects and more.
 public class TabCanvas extends WindowTab implements Runnable{
@@ -14,8 +14,7 @@ public class TabCanvas extends WindowTab implements Runnable{
 	//Camera
 	int FPSLimit = 30;
 	//Sources
-	ArrayList<GameObject> scene = new ArrayList<GameObject>();
-	AppPhysics physicsEngine = new AppPhysics(scene);
+	ArrayList<GameObject> scene;
 	public TabPause tabPause = new TabPause(this);
 	//Controls
 	MSC msc = new MSC();
@@ -28,7 +27,11 @@ public class TabCanvas extends WindowTab implements Runnable{
 		setLayout(null);
 		add(tabPause);
 		
+		//Loading scene
+		scene = SceneLoader.getScene(0);
+		
 		//Launching cores
+		new Thread(new AppPhysics()).start();
 		new Thread(this).start();
 		addMouseWheelListener(msc);
 		addKeyListener(kc);
@@ -170,8 +173,8 @@ class KC implements java.awt.event.KeyListener {
 			//TPD type
 			if (code == 0) {
 				//ESC
-				attached.tabPause.setVisible(attached.physicsEngine.active);
-				attached.physicsEngine.active = !attached.physicsEngine.active;
+				attached.tabPause.setVisible(AppPhysics.active);
+				AppPhysics.active = false;
 			}
 		}
 	}
