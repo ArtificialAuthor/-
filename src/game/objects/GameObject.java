@@ -22,6 +22,27 @@ public class GameObject {
 	}
 	
 	//CFG 3
+	//LOADING SYSTEMS
+	public boolean load(String field, String value) {
+		if (field.contains("name")) {
+			name = value;
+			return true;
+		} else if (field.contains("rotation")) {
+			rotation = Double.parseDouble(value);
+			return true;
+		} else if (field.indexOf("size") != -1) {
+			String[] arr = value.split(",");
+			size[0] = Double.parseDouble(arr[0]);
+			size[1] = Double.parseDouble(arr[1]);
+			return true;
+		} else if (field.contains("position")) {
+			String[] arr = value.split(",");
+			position[0] = Double.parseDouble(arr[0]);
+			position[1] = Double.parseDouble(arr[1]);
+			return true;
+		}
+		return false;
+	}
 	//BEHAVIVOUR SYSTEMS
 	//Add behavivour
 	public void addBehavivour(Behavivour beh) {

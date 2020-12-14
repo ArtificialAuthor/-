@@ -65,7 +65,7 @@ public class TabCanvas extends WindowTab implements Runnable{
 				//Prepare
 				double[] rPos = {
 					(obj.position[0] + kc.cPos[0]) * msc.cScale + Window.resolution.width/2,
-					(obj.position[1] + kc.cPos[1]) * msc.cScale + Window.resolution.height/2,	
+					(-obj.position[1] + kc.cPos[1]) * msc.cScale + Window.resolution.height/2,	
 				};
 				//Object has shape
 				int[] pointX = new int[obj.shape.a.length];
@@ -174,7 +174,7 @@ class KC implements java.awt.event.KeyListener {
 			if (code == 0) {
 				//ESC
 				attached.tabPause.setVisible(AppPhysics.active);
-				AppPhysics.active = false;
+				AppPhysics.active = !AppPhysics.active;
 			}
 		}
 	}

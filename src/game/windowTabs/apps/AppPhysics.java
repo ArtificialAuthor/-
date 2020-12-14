@@ -14,10 +14,12 @@ public class AppPhysics implements Runnable {
 	@Override
 	public void run() {
 		try {
-			while (active) {
-				Thread.sleep(100);
-				for (PhysicalBody body : physicalBodies) {
-					body.apply();
+			while (true) {
+				Thread.sleep(100/3);
+				if (active) {
+					for (PhysicalBody body : physicalBodies) {
+						body.apply();
+					}
 				}
 			}
 		} catch (InterruptedException e) {

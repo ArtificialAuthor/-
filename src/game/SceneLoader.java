@@ -19,26 +19,20 @@ public class SceneLoader {
 			try {
 				line = reading.nextLine().toLowerCase();
 				if (!line.contains("//")) {
+					//Ignore comments
 					if (line.equals("object")) {
+						//Paste object
 						edit++;
 						scene.add(new GameObject());
-					} else if (line.contains("name")) {
-						scene.get(edit).name = line.substring(line.indexOf("name")+5);
-					} else if (line.contains("rotation")) {
-						scene.get(edit).rotation = Double.parseDouble(line.substring(line.indexOf("rotation")+9));
-					} else if (line.indexOf("size") != -1) {
-						String[] arr = line.substring(line.indexOf("size")+5).split(",");
-						scene.get(edit).size[0] = Double.parseDouble(arr[0]);
-						scene.get(edit).size[1] = Double.parseDouble(arr[1]);
-					} else if (line.contains("position")) {
-						String[] arr = line.substring(line.indexOf("position")+9).split(",");
-						scene.get(edit).position[0] = Double.parseDouble(arr[0]);
-						scene.get(edit).position[1] = Double.parseDouble(arr[1]);
 					} else if (line.contains("behavivour")) {
+						//Paste behavivoir
 						scene.get(edit).addBehavivour(Behavivour.loadByID(line.substring(line.indexOf("behavivour")+11)));
 					} else {
 						String[] arr = line.split(" ", 2);
-						scene.get(edit).getBehavivour("latest").load(arr[0], arr[1]);
+						// >:D
+						if (!scene.get(edit).load(arr[0], arr[1])) { //Try to load to Object
+							scene.get(edit).getBehavivour("latest").load(arr[0], arr[1]); //If failed, then to its Behavivour
+						}
 					}
 				}
 			} catch (Exception e) {
