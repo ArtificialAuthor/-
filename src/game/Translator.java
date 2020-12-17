@@ -1,9 +1,8 @@
 //CFG 0
 package game;
+import java.util.Scanner;
 import java.util.ArrayList;
-import java.io.File;
-import java.io.FileReader;
-import java.io.BufferedReader;
+import java.io.FileInputStream;
 
 //Class - Translator - allows fast translation through whole game (Don't forget about handling)
 public class Translator {
@@ -14,15 +13,20 @@ public class Translator {
 	//CFG 2
 	public Translator(String lang) {
 		//DEFAULT : ru.lang
-		try (BufferedReader inTake = new BufferedReader(new FileReader(new File(Window.location+"/langs/"+lang+".lang")))) { //>:D
-			String cur = inTake.readLine();
-			while (cur != null) {
-				String[] arr = cur.split(":"); //Split it into field & value
-				fields.add(arr[0]); //Write field to fields
-				values.add(arr[1]); //Write value to values
-				cur = inTake.readLine();
+		try {
+			FileInputStream fs = new FileInputStream(Window.location+"/langs/"+lang+".lang");
+			Scanner inTake = new Scanner(fs);
+			//Reading
+			String line = inTake.nextLine();
+			while (!line.equals("!")) {
+				String[] arr = line.split(":");
+				fields.add(arr[0]);
+				values.add(arr[1]);
+				line = inTake.nextLine();
 			}
+			//Final
 			inTake.close();
+			fs.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

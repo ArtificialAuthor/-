@@ -2,31 +2,60 @@
 package game;
 import game.windowTabs.*;
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.io.FileInputStream;
+import java.io.FileWriter;
 
 //Class - Window - program host
 public final class Window extends javax.swing.JFrame{
 	//CFG 1
 	public static Window self;
+	public static Translator translator;
 	public static Dimension resolution = Toolkit.getDefaultToolkit().getScreenSize();
 	public static int current = 0; //Current panel ID, must be 0 for displaying main menu
 	public static ArrayList<WindowTab> tabs = new ArrayList<WindowTab>(); //List of all possible panels with IDs equals their index
 	public static String location;
-	//Service classes
-	public static Translator translator;
 	
 	//CFG 2
 	public Window() {
+		//Loading settings
+		try {
+			//Fine found, prepare
+			FileInputStream fs = new FileInputStream(location+"/settings.cfg");
+			Scanner sw = new Scanner(fs);
+			//Load settings
+			String load = "";
+			while (!load.equals("!")) {
+				load = sw.nextLine().toLowerCase();
+				String arr[] = load.split(":");
+				if (arr[0].equals("lang")) {
+					translator = new Translator(arr[1]);
+				}
+			}
+			//Close streams
+			sw.close();
+			fs.close();
+		} catch (Exception e) {
+			//File not found, create
+			try {
+				//Write to defaults
+				FileWriter fw = new FileWriter(location+"/settings.cfg");
+				fw.write("lang:en\n!");
+				fw.flush();
+				fw.close();
+				//Roll to defaults
+				translator = new Translator("en");
+			} catch (Exception fwe) {}
+		}
+		
 		//Pre - CFG
 		setExtendedState(MAXIMIZED_BOTH);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setUndecorated(true);
 		setVisible(true);
 		setPreferredSize(resolution);
-		
-		//Loading service classes
-		translator = new Translator("ru");
 		
 		//Panel loading & IDs
 		tabs.add(new TabMainMenu()); //0
